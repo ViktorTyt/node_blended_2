@@ -1,4 +1,4 @@
-// console.log("Hello backend");
+console.log("Hello backend");
 const express = require("express");
 require("colors");
 const path = require("path");
