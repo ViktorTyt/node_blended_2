@@ -1,4 +1,4 @@
-const deviceModel = require("../models/deviceModel");
+const DeviceModel = require("../models/deviceModel");
 const asyncHandler = require("express-async-handler");
 
 class DevicesControllers {
@@ -8,7 +8,7 @@ class DevicesControllers {
       res.status(400);
       throw new Error("please provide vendor and/or price");
     }
-    const data = await deviceModel.create(req.body);
+    const data = await DeviceModel.create(req.body);
 
     if (!data) {
       res.status(400);
@@ -23,7 +23,7 @@ class DevicesControllers {
   });
 
   getAll = asyncHandler(async (req, res) => {
-    const data = await deviceModel.find({});
+    const data = await DeviceModel.find({});
     if (!data) {
       res.status(400);
       throw new Error("unable to fetch devices");
