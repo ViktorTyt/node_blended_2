@@ -18,7 +18,12 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
-    // roles:,
+    roles: [
+      {
+        type: String,
+        ref: "Role",
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );

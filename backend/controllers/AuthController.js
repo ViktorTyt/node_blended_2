@@ -1,11 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const UserModel = require("../models/userModel");
+const RoleModel = require("../models/roleModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 class AuthController {
-  generateToken = (id) => {
-    const payload = { id };
+  generateToken = (id, roles) => {
+    const payload = { id, roles };
     return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "8h" });
   };
 
@@ -31,9 +32,12 @@ class AuthController {
       throw new Error("Unable to hash password");
     }
 
+    const candidateRole = await RoleModel.findOne({ value: "ADMIN" });
+
     const user = await UserModel.create({
       ...req.body,
       userPassword: hashPassword,
+      roles: [candidateRole.value],
     });
 
     if (!user) {
@@ -64,7 +68,7 @@ class AuthController {
       throw new Error("Invalid login or password");
     }
 
-    user.token = this.generateToken(user._id);
+    user.token = this.generateToken(user._id, user.roles);
     await user.save();
 
     if (!user.token) {
@@ -104,7 +108,9 @@ class AuthController {
     });
   });
 
-  info = asyncHandler(async (req, res) => {});
+  info = asyncHandler(async (req, res) => {
+    res.send("get all user info");
+  });
 }
 
 module.exports = new AuthController();

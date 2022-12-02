@@ -9,6 +9,7 @@ const { prefixDevices } = require("../config/routesPrefix");
 const errorHandler = require("./middlewares/errorHandler");
 const AuthController = require("./controllers/AuthController");
 const authMiddleware = require("./middlewares/authMiddleware");
+const roleMiddleware = require("./middlewares/roleMiddleware");
 
 const configPath = path.join(__dirname, "..", "config", ".env");
 
@@ -31,7 +32,7 @@ app.post(
 );
 app.post("/login", AuthController.login);
 app.get("/logout", authMiddleware, AuthController.logout);
-app.get("/users/info", AuthController.info);
+app.get("/users/info", roleMiddleware(["ADMIN"]), AuthController.info);
 
 app.use((req, res) => res.status(401).json("not found"));
 
